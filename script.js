@@ -35,13 +35,13 @@ async function loadSalesFromSheetDB() {
       console.log("Available headers:", Object.keys(data[0]));
     }
 
-    sales = data.map(row => {
-      const staff = getValue(row, ["Staff Name", "Staff", "Name"]);
-      const category = getValue(row, ["Category", "Product Category"]);
-      const product = getValue(row, ["Product/SKU", "Product/VSKU", "Product SKU", "Product", "SKU"]);
-      const qty = cleanNumber(getValue(row, ["Quantity Sold", "Qty sold", "Qty Sold", "Quantity", "Qty"]));
-      const unitPrice = cleanNumber(getValue(row, ["Unit Selling Price", "Selling Price", "Unit Price", "Price"]));
-      const totalDirect = cleanNumber(getValue(row, ["Total sales ₦", "Total Sales", "Total sales", "Amount", "Sales Amount"]));
+    sales = data.map(row => ({
+  staff: row["Staff Name"] || "",
+  category: row["Category"] || "",
+  product: row["Product/VSKU"] || "",
+  qty: Number(row["Quantity Sold"] || 0),
+  amount: Number(row["Unit Selling Price"] || 0)
+}));
 
       return {
         staff,
