@@ -1,142 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Timzy Fashion Operating System</title>
+
+  <title>Timzy Fashion OS</title>
+
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <header class="hero">
-    <div>
-      <p class="eyebrow">TIMZY FASHION OS</p>
-      <h1>Business Command Center</h1>
-      <p>Sales • Inventory • Orders • Customers • Staff XP</p>
+
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="login-page">
+
+    <div class="login-card">
+
+      <h1>Timzy Fashion OS</h1>
+
+      <p>Secure Staff Login</p>
+
+      <input
+        id="loginEmail"
+        type="email"
+        placeholder="Enter Email"
+      />
+
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Enter Password"
+      />
+
+      <button onclick="loginUser()">
+        Login
+      </button>
+
     </div>
-    <div class="xp-card">
-      <span>Business Health</span>
-      <strong id="healthScore">85%</strong>
-      <div class="bar"><i style="width:85%"></i></div>
-    </div>
-  </header>
 
-  <nav class="nav-buttons">
+  </div>
 
-  <button type="button" onclick="showTab('dashboard')">
-    🏠 Dashboard
-  </button>
 
-  <button type="button" onclick="showTab('sales')">
-    💰 Sales
-  </button>
+  <!-- MAIN APP -->
+  <div id="app" style="display:none;">
 
-  <button type="button" onclick="showTab('inventory')">
-    📦 Inventory
-  </button>
+    <!-- HERO -->
+    <header class="hero">
 
-  <button type="button" onclick="showTab('orders')">
-    🧵 Orders
-  </button>
+      <div>
+        <p class="eyebrow">TIMZY FASHION OS</p>
 
-  <button type="button" onclick="showTab('customers')">
-    👗 Customers
-  </button>
+        <h1>Business Command Center</h1>
 
-  <button type="button" onclick="showTab('staff')">
-    🏆 Staff XP
-  </button>
-
-  <button type="button" onclick="showTab('forms')">
-    📝 Google Forms
-  </button>
-
-</nav>
-
-  <main>
-    <section id="dashboard" class="tab active">
-      <h2>Executive Dashboard</h2>
-      <div class="cards">
-        <div class="card"><span>Total Sales</span><strong id="totalSales">₦0</strong></div>
-        <div class="card"><span>Total Expenses</span><strong id="totalExpenses">₦0</strong></div>
-        <div class="card"><span>Net Profit</span><strong id="netProfit">₦0</strong></div>
-        <div class="card"><span>Inventory Value</span><strong id="inventoryValue">₦0</strong></div>
-        <div class="card warning"><span>Low Stock</span><strong id="lowStock">0</strong></div>
-        <div class="card"><span>Pending Orders</span><strong id="pendingOrders">0</strong></div>
+        <p>
+          Sales • Inventory • Orders • Customers • Staff XP
+        </p>
       </div>
-    </section>
 
-    <section id="sales" class="tab">
-      <h2>Sales Entry</h2>
-      <form id="salesForm">
-        <input id="salesStaff" placeholder="Staff name" required />
-        <select id="salesCategory" required><option value="">Category</option><option>Chimezie Materials</option><option>Our Material</option><option>Adire</option><option>Aseoke</option></select>
-        <input id="salesProduct" placeholder="Product/SKU" required />
-        <input id="salesQty" type="number" placeholder="Qty sold" required />
-        <input id="salesAmount" type="number" placeholder="Total sales ₦" required />
-        <button>Add Sale +10 XP</button>
-      </form>
-      <table><thead><tr><th>Staff</th><th>Category</th><th>Product</th><th>Qty</th><th>Amount</th><th></th></tr></thead><tbody id="salesTable"></tbody></table>
-    </section>
+      <div class="xp-card">
 
-    <section id="inventory" class="tab">
-      <h2>Inventory Control</h2>
-      <form id="inventoryForm">
-        <input id="invStaff" placeholder="Staff name" required />
-        <select id="invCategory" required><option value="">Category</option><option>Chimezie Materials</option><option>Our Material</option><option>Adire</option><option>Aseoke</option></select>
-        <input id="invProduct" placeholder="Product name" required />
-        <input id="invSku" placeholder="SKU" required />
-        <input id="invAdded" type="number" placeholder="Qty added" required />
-        <input id="invCost" type="number" placeholder="Cost price ₦" required />
-        <button>Add Stock +5 XP</button>
-      </form>
-      <table><thead><tr><th>Category</th><th>Product</th><th>SKU</th><th>Added</th><th>Sold</th><th>Remaining</th><th>Status</th><th>Value</th><th></th></tr></thead><tbody id="inventoryTable"></tbody></table>
-    </section>
+        <span>Business Health</span>
 
-    <section id="orders" class="tab">
-      <h2>Order Tracker</h2>
-      <form id="orderForm">
-        <input id="orderId" placeholder="Order ID" required />
-        <input id="orderCustomer" placeholder="Customer name" required />
-        <input id="orderPhone" placeholder="Phone number" />
-        <input id="orderStaff" placeholder="Assigned staff/tailor" required />
-        <select id="orderStatus"><option>Pending</option><option>In Progress</option><option>Ready</option><option>Completed</option><option>Late</option></select>
-        <input id="orderAmount" type="number" placeholder="Amount ₦" required />
-        <button>Add Order</button>
-      </form>
-      <table><thead><tr><th>Order ID</th><th>Customer</th><th>Staff</th><th>Status</th><th>Amount</th><th></th></tr></thead><tbody id="ordersTable"></tbody></table>
-    </section>
+        <strong id="healthScore">85%</strong>
 
-    <section id="customers" class="tab">
-      <h2>Customer & Measurement Bank</h2>
-      <form id="customerForm">
-        <input id="custName" placeholder="Customer name" required />
-        <input id="custPhone" placeholder="Phone number" required />
-        <input id="custMeasure" placeholder="Measurements summary" />
-        <input id="custNotes" placeholder="Style notes" />
-        <button>Save Customer</button>
-      </form>
-      <table><thead><tr><th>Name</th><th>Phone</th><th>Measurements</th><th>Style Notes</th><th></th></tr></thead><tbody id="customersTable"></tbody></table>
-    </section>
+        <div class="bar">
+          <i style="width:85%"></i>
+        </div>
 
-    <section id="staff" class="tab">
-      <h2>Staff Leaderboard</h2>
-      <div id="leaderboard" class="leaderboard"></div>
-    </section>
+        <br>
 
-    <section id="forms" class="tab">
-      <h2>Google Forms Hub</h2>
-      <p class="note">Paste your real Google Form links inside <b>forms-config.js</b>. This page becomes the clean staff portal.</p>
-      <div class="form-grid" id="formLinks"></div>
-    </section>
-  </main>
+        <button onclick="logoutUser()">
+          Logout
+        </button>
 
-  <footer>
-    <button onclick="exportBackup()">⬇️ Export Backup</button>
-    <button onclick="clearData()">🧨 Clear Demo Data</button>
-    <p>Phase 2 web interface. For multi-staff cloud sync, connect the Google Forms/Sheets links.</p>
-  </footer>
+      </div>
 
+    </header>
+
+
+    <!-- NAVIGATION -->
+    <nav class="nav-buttons">
+
+      <button onclick="showTab('dashboard')">
+        🏠 Dashboard
+      </button>
+
+      <button onclick="showTab('sales')">
+        💰 Sales
+      </button>
+
+      <button onclick="showTab('inventory')">
+        📦 Inventory
+      </button>
+
+      <button onclick="showTab('orders')">
+        🧵 Orders
+      </button>
+
+      <button onclick="showTab('customers')">
+        👗 Customers
+      </button>
+
+      <button onclick="showTab('staff')">
+        🏆 Staff XP
+      </button>
+
+      <button onclick="showTab('forms')">
+        📝 Google Forms
+      </button>
+
+    </nav>
+
+
+    <!-- MAIN -->
+    <main>
+
+      <!-- DASHBOARD -->
+      <section id="dashboard" class="tab active">
+
+        <h2>Executive Dashboard</h2>
+
+        <div class="cards">
+
+          <div class="card">
+            <span>Total Sales</span>
+            <strong id="totalSales">₦0</strong>
+          </div>
+
+          <div class="card">
+            <span>Net Profit</span>
+            <strong id="netProfit">₦0</strong>
+          </div>
+
+          <div class="card">
+            <span>Inventory Value</span>
+            <strong id="inventoryValue">₦0</strong>
+          </div>
+
+          <div class="card warning">
+            <span>Low Stock</span>
+            <strong id="lowStock">0</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- SALES -->
+      <section id="sales" class="tab">
+
+        <h2>Sales Entry</h2>
+
+        <form>
+
+          <input
+            id="salesStaff"
+            placeholder="Staff name"
+          />
+
+          <select id="salesCategory">
+
+            <option value="">
+              Category
+            </option>
+
+            <option>
+              Chimezie Materials
+            </option>
+
+            <option>
+              Our Material
+            </option>
+
+            <option>
+              Adire
+            </option>
+
+            <option>
+              Aseoke
+            </option>
+
+          </select>
+
+          <input
+            id="salesProduct"
+            placeholder="Product/SKU"
+          />
+
+          <input
+            id="salesQty"
+            type="number"
+            placeholder="Qty sold"
+          />
+
+          <input
+            id="salesAmount"
+            type="number"
+            placeholder="Total sales ₦"
+          />
+
+          <button
+            type="button"
+            onclick="addSale()"
+          >
+            Add Sale +10 XP
+          </button>
+
+        </form>
+
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Staff</th>
+              <th>Category</th>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Amount</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="salesTable"></tbody>
+
+        </table>
+
+      </section>
+
+
+      <!-- INVENTORY -->
+      <section id="inventory" class="tab">
+
+        <h2>Inventory Control</h2>
+
+        <p>
+          Inventory module coming next.
+        </p>
+
+      </section>
+
+
+      <!-- ORDERS -->
+      <section id="orders" class="tab">
+
+        <h2>Orders</h2>
+
+        <p>
+          Orders module coming next.
+        </p>
+
+      </section>
+
+
+      <!-- CUSTOMERS -->
+      <section id="customers" class="tab">
+
+        <h2>Customers</h2>
+
+        <p>
+          Customer portal coming next.
+        </p>
+
+      </section>
+
+
+      <!-- STAFF -->
+      <section id="staff" class="tab">
+
+        <h2>Staff XP Leaderboard</h2>
+
+        <div
+          id="leaderboard"
+          class="leaderboard"
+        ></div>
+
+      </section>
+
+
+      <!-- FORMS -->
+      <section id="forms" class="tab">
+
+        <h2>Google Forms Hub</h2>
+
+        <div
+          class="form-grid"
+          id="formLinks"
+        ></div>
+
+      </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+      <p>
+        Timzy Fashion OS Cloud Edition
+      </p>
+
+    </footer>
+
+  </div>
+
+
+  <!-- SCRIPTS -->
   <script src="forms-config.js"></script>
-  <script type="module" src="script.js"></script>
+
+  <script
+    type="module"
+    src="script.js"
+  ></script>
+
 </body>
+
 </html>
