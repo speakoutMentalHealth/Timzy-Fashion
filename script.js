@@ -169,16 +169,20 @@ function staffXP() {
 }
 
 
-// RENDER
 function render() {
+
   const salesTable = document.getElementById("salesTable");
   const totalSales = document.getElementById("totalSales");
   const netProfit = document.getElementById("netProfit");
   const inventoryValue = document.getElementById("inventoryValue");
   const lowStock = document.getElementById("lowStock");
   const leaderboard = document.getElementById("leaderboard");
+  const formLinks = document.getElementById("formLinks");
 
+
+  // SALES TABLE
   if (salesTable) {
+
     salesTable.innerHTML = sales.map(x => `
       <tr>
         <td>${x.staff}</td>
@@ -188,41 +192,71 @@ function render() {
         <td>${money(x.amount)}</td>
       </tr>
     `).join("");
+
   }
 
+
+  // TOTAL SALES
   const total = sales.reduce(
     (sum, item) => sum + Number(item.amount || 0),
     0
   );
 
-  if (totalSales) totalSales.textContent = money(total);
-  if (netProfit) netProfit.textContent = money(total);
-  if (inventoryValue) inventoryValue.textContent = "₦0";
-  if (lowStock) lowStock.textContent = "0";
+  if (totalSales) {
+    totalSales.textContent = money(total);
+  }
 
+  if (netProfit) {
+    netProfit.textContent = money(total);
+  }
+
+  if (inventoryValue) {
+    inventoryValue.textContent = "₦0";
+  }
+
+  if (lowStock) {
+    lowStock.textContent = "0";
+  }
+
+
+  // STAFF XP
   if (leaderboard) {
+
     leaderboard.innerHTML = staffXP().map((x, i) => `
       <div class="rank-card">
+
         <span>
           #${i + 1}
           <b>${x.name}</b>
           <br>
           ${x.rank}
         </span>
+
         <strong>${x.points} XP</strong>
+
       </div>
     `).join("") || "<p>No staff points yet.</p>";
 
-    const formLinks = document.getElementById("formLinks");
-
-if (formLinks) {
-  formLinks.innerHTML = (window.TIMZY_FORMS || []).map(f => `
-    <div class="form-card">
-      <h3>${f.name}</h3>
-      <p>${f.description}</p>
-      <a href="${f.url}" target="_blank">Open Form</a>
-    </div>
-  `).join("");
-}
   }
+
+
+  // GOOGLE FORMS
+  if (formLinks) {
+
+    formLinks.innerHTML = (window.TIMZY_FORMS || []).map(f => `
+      <div class="form-card">
+
+        <h3>${f.name}</h3>
+
+        <p>${f.description}</p>
+
+        <a href="${f.url}" target="_blank">
+          Open Form
+        </a>
+
+      </div>
+    `).join("");
+
+  }
+
 }
