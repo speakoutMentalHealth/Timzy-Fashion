@@ -14,27 +14,48 @@ function cleanNumber(value){
   return Number(String(value || "0").replace(/[₦,\s]/g,"")) || 0;
 }
 
-async function loadSalesFromSheetDB(){
-  try{
+async function loadSalesFromSheetDB() {
+  try {
+
     const response = await fetch(SALES_API);
     const data = await response.json();
 
-    console.log("RAW DATA:", data);
-    console.log("HEADERS:", data[0] ? Object.keys(data[0]) : "No data");
+    console.log("SheetDB raw data:", data);
 
-    sales = data.map(row => ({
-      staff: row["Staff Name"] || row["Staff"] || "",
-      category: row["Category"] || "",
-      product: row["Product/VSKU"] || row["Product/SKU"] || row["Product SKU"] || "",
-      qty: cleanNumber(row["Quantity Sold"] || row["Qty sold"] || row["Qty"]),
-      amount: cleanNumber(row["Unit Selling Price"] || row["Total sales ₦"] || row["Total Sales"] || row["Amount"])
-    }));
+    sales = data.map(row => {
+
+      const qty = Number(
+        row["Quantity Sold"] ||
+        row["Qty sold"] ||
+        0
+      );
+
+      const unitPrice = Number(
+        String(
+          row["Unit Selling Price"] || 0
+        ).replace(/[₦,\s]/g, "")
+      );
+
+      return {
+        staff: row["Staff Name"] || "-",
+        category: row["Category"] || "-",
+        product: row["Product/VSKU"] || row["Product/SKU"] || "-",
+        qty: qty,
+        amount: qty * unitPrice
+      };
+
+    });
+
+    console.log("Processed sales:", sales);
 
     render();
 
-  }catch(error){
-    console.error("ERROR:", error);
-    alert("Could not load sales. Check console.");
+  } catch (error) {
+
+    console.error("SheetDB sales loading error:", error);
+
+    alert("Sales data could not load.");
+
   }
 }
 
