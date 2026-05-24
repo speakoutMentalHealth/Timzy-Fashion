@@ -12,32 +12,59 @@ function showTab(id) {
   document.getElementById(id).classList.add('active');
 }
 
+function getValue(row, possibleNames) {
+  for (const name of possibleNames) {
+    if (row[name] !== undefined && row[name] !== null && row[name] !== "") {
+      return row[name];
+    }
+  }
+  return "";
+}
+
+function cleanNumber(value) {
+  return Number(String(value || "0").replace(/[₦,\s]/g, "")) || 0;
+}
+
 async function loadSalesFromSheetDB() {
   try {
     const response = await fetch(SALES_API);
     const data = await response.json();
 
-    sales = data.map(row => ({
-  staff: row["Staff Name"] || "",
-  category: row["Category"] || "",
-  product: row["Product/VSKU"] || row["Product/SKU"] || "",
-  qty: Number(row["Quantity Sold"] || row["Qty sold"] || 0),
-  amount:
-    Number(row["Quantity Sold"] || row["Qty sold"] || 0) *
-    Number(row["Unit Selling Price"] || row["Total sales ₦"] || 0)
-}));
+    console.log("SheetDB raw data:", data);
+    if (data.length > 0) {
+      console.log("Available headers:", Object.keys(data[0]));
+    }
+
+    sales = data.map(row => {
+      const staff = getValue(row, ["Staff Name", "Staff", "Name"]);
+      const category = getValue(row, ["Category", "Product Category"]);
+      const product = getValue(row, ["Product/SKU", "Product/VSKU", "Product SKU", "Product", "SKU"]);
+      const qty = cleanNumber(getValue(row, ["Quantity Sold", "Qty sold", "Qty Sold", "Quantity", "Qty"]));
+      const unitPrice = cleanNumber(getValue(row, ["Unit Selling Price", "Selling Price", "Unit Price", "Price"]));
+      const totalDirect = cleanNumber(getValue(row, ["Total sales ₦", "Total Sales", "Total sales", "Amount", "Sales Amount"]));
+
+      return {
+        staff,
+        category,
+        product,
+        qty,
+        amount: totalDirect || (qty * unitPrice)
+      };
+    });
 
     render();
 
   } catch (error) {
     console.error("SheetDB sales loading error:", error);
-    alert("Sales data could not load from SheetDB.");
+    alert("Sales data could not load from SheetDB. Check API or console.");
   }
 }
 
 function staffXP() {
   let xp = {};
-  sales.forEach(x => xp[x.staff] = (xp[x.staff] || 0) + 10);
+  sales.forEach(x => {
+    if (x.staff) xp[x.staff] = (xp[x.staff] || 0) + 10;
+  });
 
   return Object.entries(xp)
     .map(([name, points]) => ({
@@ -54,10 +81,10 @@ function staffXP() {
 function render() {
   salesTable.innerHTML = sales.map(x => `
     <tr>
-      <td>${x.staff}</td>
-      <td>${x.category}</td>
-      <td>${x.product}</td>
-      <td>${x.qty}</td>
+      <td>${x.staff || "-"}</td>
+      <td>${x.category || "-"}</td>
+      <td>${x.product || "-"}</td>
+      <td>${x.qty || 0}</td>
       <td>${money(x.amount)}</td>
       <td>From Google Form</td>
     </tr>
