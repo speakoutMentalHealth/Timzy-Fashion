@@ -24,27 +24,37 @@ async function loadSalesFromSheetDB() {
 
     sales = data.map(row => {
 
-      const qty = Number(
-        row["Quantity Sold"] ||
-        row["Qty sold"] ||
-        0
-      );
+  const normalized = {};
 
-      const unitPrice = Number(
-        String(
-          row["Unit Selling Price"] || 0
-        ).replace(/[₦,\s]/g, "")
-      );
+  Object.keys(row).forEach(key => {
+    const cleanKey = key.trim().toLowerCase();
+    normalized[cleanKey] = row[key];
+  });
 
-      return {
-        staff: row["Staff Name"] || "-",
-        category: row["Category"] || "-",
-        product: row["Product/VSKU"] || row["Product/SKU"] || "-",
-        qty: qty,
-        amount: qty * unitPrice
-      };
+  const qty = cleanNumber(
+    normalized["quantity sold"] ||
+    normalized["qty sold"] ||
+    normalized["quantity"] ||
+    0
+  );
 
-    });
+  const unitPrice = cleanNumber(
+    normalized["unit selling price"] ||
+    normalized["selling price"] ||
+    normalized["total sales ₦"] ||
+    normalized["total sales"] ||
+    0
+  );
+
+  return {
+    staff: normalized["staff name"] || "-",
+    category: normalized["category"] || "-",
+    product: normalized["product/vsku"] || normalized["product/sku"] || "-",
+    qty: qty,
+    amount: qty * unitPrice
+  };
+
+});
 
     console.log("Processed sales:", sales);
 
