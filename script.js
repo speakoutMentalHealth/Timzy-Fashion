@@ -67,6 +67,10 @@ onAuthStateChanged(auth, user => {
   if (user) {
     loginPage.style.display = "none";
     appView.style.display = "block";
+
+    const email = user.email.toLowerCase();
+
+    setupRoleAccess(email);
     loadAllData();
   } else {
     loginPage.style.display = "flex";
@@ -74,10 +78,76 @@ onAuthStateChanged(auth, user => {
   }
 });
 
+function setupRoleAccess(email) {
+  hideAllSections();
+
+  if (email === "admin@timzyfashion.com") {
+    showAllSections();
+    showTab("dashboard");
+    return;
+  }
+
+  if (email.includes("staff")) {
+    showRoleSections([
+      "dashboard",
+      "sales",
+      "inventory",
+      "orders",
+      "forms"
+    ]);
+
+    showTab("dashboard");
+    return;
+  }
+
+  showRoleSections([
+    "customers"
+  ]);
+
+  showTab("customers");
+}
+
+function hideAllSections() {
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.style.display = "none";
+    tab.classList.remove("active");
+  });
+
+  document.querySelectorAll("nav button").forEach(btn => {
+    btn.style.display = "none";
+  });
+}
+
+function showAllSections() {
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.style.display = "";
+  });
+
+  document.querySelectorAll("nav button").forEach(btn => {
+    btn.style.display = "inline-block";
+  });
+}
+
+function showRoleSections(sectionIds) {
+  sectionIds.forEach(id => {
+    const section = document.getElementById(id);
+    const button = document.querySelector(`button[onclick="showTab('${id}')"]`);
+
+    if (section) section.style.display = "";
+    if (button) button.style.display = "inline-block";
+  });
+}
+
 window.showTab = function (id) {
-  document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.classList.remove("active");
+  });
+
   const selectedTab = document.getElementById(id);
-  if (selectedTab) selectedTab.classList.add("active");
+
+  if (selectedTab) {
+    selectedTab.classList.add("active");
+  }
 };
 
 async function fetchSheet(api) {
@@ -87,7 +157,12 @@ async function fetchSheet(api) {
 
 async function loadAllData() {
   try {
-    const [salesData, inventoryData, ordersData, customersData] = await Promise.all([
+    const [
+      salesData,
+      inventoryData,
+      ordersData,
+      customersData
+    ] = await Promise.all([
       fetchSheet(SALES_API),
       fetchSheet(INVENTORY_API),
       fetchSheet(ORDERS_API),
@@ -96,8 +171,19 @@ async function loadAllData() {
 
     sales = salesData.map(row => {
       const n = normalize(row);
-      const qty = cleanNumber(n["quantity sold"] || n["qty sold"] || n["quantity"]);
-      const unitPrice = cleanNumber(n["unit selling price"] || n["selling price"] || n["total sales"] || n["total sales ₦"]);
+
+      const qty = cleanNumber(
+        n["quantity sold"] ||
+        n["qty sold"] ||
+        n["quantity"]
+      );
+
+      const unitPrice = cleanNumber(
+        n["unit selling price"] ||
+        n["selling price"] ||
+        n["total sales"] ||
+        n["total sales ₦"]
+      );
 
       return {
         staff: n["staff name"] || "-",
@@ -247,15 +333,32 @@ function render() {
       <tr>
         <td>${x.name}</td>
         <td>${x.phone}</td>
-        <td>Shoulder: ${x.shoulder}<br>Chest/Bust: ${x.chest}<br>Waist: ${x.waist}<br>Hip: ${x.hip}<br>Sleeve: ${x.sleeve}<br>Length: ${x.length}</td>
+        <td>
+          Shoulder: ${x.shoulder}<br>
+          Chest/Bust: ${x.chest}<br>
+          Waist: ${x.waist}<br>
+          Hip: ${x.hip}<br>
+          Sleeve: ${x.sleeve}<br>
+          Length: ${x.length}
+        </td>
         <td>${x.notes}</td>
       </tr>
     `).join("");
   }
 
-  const totalSalesAmount = sales.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  const inventoryValueAmount = inventory.reduce((sum, item) => sum + Number(item.quantity * item.cost || 0), 0);
-  const lowStockCount = inventory.filter(item => item.quantity <= 5).length;
+  const totalSalesAmount = sales.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0
+  );
+
+  const inventoryValueAmount = inventory.reduce(
+    (sum, item) => sum + Number(item.quantity * item.cost || 0),
+    0
+  );
+
+  const lowStockCount = inventory.filter(
+    item => item.quantity <= 5
+  ).length;
 
   const totalSales = document.getElementById("totalSales");
   const netProfit = document.getElementById("netProfit");
