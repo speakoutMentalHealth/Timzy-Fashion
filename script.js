@@ -1,3 +1,4 @@
+```javascript
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
@@ -16,14 +17,27 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+
+/* FIREBASE */
+
 const firebaseConfig = {
+
   apiKey: "AIzaSyBCizR30KTtGXwlelD4Qxdu9IHJdPm-IlU",
+
   authDomain: "timzy-fashion-os.firebaseapp.com",
+
   projectId: "timzy-fashion-os",
+
   storageBucket: "timzy-fashion-os.firebasestorage.app",
+
   messagingSenderId: "515655826693",
+
   appId: "1:515655826693:web:4085b86651f39ffa03cb6c"
+
 };
+
+
 
 const app = initializeApp(firebaseConfig);
 
@@ -31,23 +45,49 @@ const auth = getAuth(app);
 
 const db = getFirestore(app);
 
+
+
+/* APIS */
+
 const SALES_API =
   "https://sheetdb.io/api/v1/75j0rpy9j199t?sheet=Sales%20Responses";
 
 const INVENTORY_API =
   "https://sheetdb.io/api/v1/75j0rpy9j199t?sheet=Inventory%20Restock";
 
+const EXPENSES_API =
+  "https://sheetdb.io/api/v1/75j0rpy9j199t?sheet=Expense%20Responses";
+
+
+
+/* DATA */
+
 let sales = [];
+
 let inventory = [];
+
+let expenses = [];
+
 let orders = [];
+
 let customers = [];
+
+
+
+/* USER */
 
 let currentRole = "customer";
 
 let currentUserEmail = "";
 
+
+
+/* HELPERS */
+
 const money =
   n => "₦" + Number(n || 0).toLocaleString();
+
+
 
 function cleanNumber(value) {
 
@@ -57,6 +97,8 @@ function cleanNumber(value) {
   ) || 0;
 
 }
+
+
 
 function normalize(row) {
 
@@ -74,6 +116,8 @@ function normalize(row) {
 }
 
 
+
+/* AUTH */
 
 window.loginUser = async function () {
 
@@ -109,33 +153,66 @@ window.logoutUser = async function () {
 
 
 
+/* MEASUREMENTS */
+
 window.submitMeasurement = async function () {
 
   try {
 
+    let targetEmail;
+
+    // CUSTOMER
+    if (currentRole === "customer") {
+
+      targetEmail = currentUserEmail;
+
+    } else {
+
+      // STAFF + ADMIN
+      targetEmail =
+        document.getElementById(
+          "targetCustomerEmail"
+        ).value.toLowerCase();
+
+    }
+
     await addDoc(
       collection(db, "customerMeasurements"),
       {
-        email: currentUserEmail,
+
+        email: targetEmail,
+
+        uploadedBy: currentUserEmail,
+
         name:
           document.getElementById("cmName").value,
+
         phone:
           document.getElementById("cmPhone").value,
+
         shoulder:
           document.getElementById("cmShoulder").value,
+
         chest:
           document.getElementById("cmChest").value,
+
         waist:
           document.getElementById("cmWaist").value,
+
         hip:
           document.getElementById("cmHip").value,
+
         sleeve:
           document.getElementById("cmSleeve").value,
+
         length:
           document.getElementById("cmLength").value,
+
         notes:
           document.getElementById("cmNotes").value,
+
         createdAt: new Date()
+
       }
     );
 
@@ -155,9 +232,28 @@ window.submitMeasurement = async function () {
 
 
 
+/* ORDERS */
+
 window.submitOrder = async function () {
 
   try {
+
+    let targetEmail;
+
+    // CUSTOMER
+    if (currentRole === "customer") {
+
+      targetEmail = currentUserEmail;
+
+    } else {
+
+      // STAFF + ADMIN
+      targetEmail =
+        document.getElementById(
+          "targetCustomerEmail"
+        ).value.toLowerCase();
+
+    }
 
     const amount =
       cleanNumber(
@@ -172,20 +268,34 @@ window.submitOrder = async function () {
     await addDoc(
       collection(db, "customerOrders"),
       {
-        email: currentUserEmail,
+
+        email: targetEmail,
+
+        uploadedBy: currentUserEmail,
+
         customer:
           document.getElementById("coName").value,
+
         phone:
           document.getElementById("coPhone").value,
+
         product:
           document.getElementById("coStyle").value,
+
         status: "Pending",
+
         delivery:
           document.getElementById("coDelivery").value,
+
         amount,
+
         deposit,
-        balance: amount - deposit,
+
+        balance:
+          amount - deposit,
+
         createdAt: new Date()
+
       }
     );
 
@@ -204,6 +314,8 @@ window.submitOrder = async function () {
 };
 
 
+
+/* SESSION */
 
 onAuthStateChanged(auth, user => {
 
@@ -240,6 +352,8 @@ onAuthStateChanged(auth, user => {
 
 
 
+/* ROLES */
+
 function setupRoleAccess(email) {
 
   hideAllSections();
@@ -252,6 +366,7 @@ function setupRoleAccess(email) {
     showRoleSections([
       "dashboard",
       "sales",
+      "expenses",
       "inventory",
       "orders",
       "customers",
@@ -287,8 +402,7 @@ function setupRoleAccess(email) {
   currentRole = "customer";
 
   showRoleSections([
-    "customers",
-    "forms"
+    "customers"
   ]);
 
   showTab("customers");
@@ -296,6 +410,8 @@ function setupRoleAccess(email) {
 }
 
 
+
+/* UI */
 
 function hideAllSections() {
 
@@ -365,6 +481,8 @@ window.showTab = function (id) {
 
 
 
+/* API */
+
 async function fetchSheet(api) {
 
   const response =
@@ -376,14 +494,17 @@ async function fetchSheet(api) {
 
 
 
+/* FIRESTORE */
+
 async function loadFirestoreData() {
 
   try {
 
     let measurementQuery;
+
     let ordersQuery;
 
-    // CUSTOMER ONLY SEES OWN
+    // CUSTOMER ONLY
     if (currentRole === "customer") {
 
       measurementQuery = query(
@@ -406,7 +527,7 @@ async function loadFirestoreData() {
 
     } else {
 
-      // STAFF + ADMIN SEE ALL
+      // STAFF + ADMIN
       measurementQuery =
         collection(db, "customerMeasurements");
 
@@ -419,7 +540,9 @@ async function loadFirestoreData() {
       await getDocs(measurementQuery);
 
     customers =
-      measurementSnapshot.docs.map(doc => doc.data());
+      measurementSnapshot.docs.map(
+        doc => doc.data()
+      );
 
 
 
@@ -427,7 +550,9 @@ async function loadFirestoreData() {
       await getDocs(ordersQuery);
 
     orders =
-      ordersSnapshot.docs.map(doc => doc.data());
+      ordersSnapshot.docs.map(
+        doc => doc.data()
+      );
 
 
 
@@ -443,19 +568,25 @@ async function loadFirestoreData() {
 
 
 
+/* LOAD */
+
 async function loadAllData() {
 
   try {
 
     const [
       salesData,
-      inventoryData
+      inventoryData,
+      expensesData
     ] = await Promise.all([
       fetchSheet(SALES_API),
-      fetchSheet(INVENTORY_API)
+      fetchSheet(INVENTORY_API),
+      fetchSheet(EXPENSES_API)
     ]);
 
 
+
+    /* SALES */
 
     sales = salesData.map(row => {
 
@@ -477,50 +608,110 @@ async function loadAllData() {
         );
 
       return {
+
         staff:
           n["staff name"] || "-",
+
         category:
           n["category"] || "-",
+
         product:
           n["product/vsku"] ||
           n["product/sku"] ||
           "-",
+
         qty,
+
         amount:
           qty * unitPrice
+
       };
 
     });
 
 
 
+    /* INVENTORY */
+
     inventory = inventoryData.map(row => {
 
       const n = normalize(row);
 
       return {
-        staff:
-          n["staff name"] || "-",
+
         category:
           n["category"] || "-",
+
         product:
           n["product name"] || "-",
+
         sku:
           n["sku"] || "-",
+
         supplier:
           n["supplier/vendor"] || "-",
+
         quantity:
           cleanNumber(
             n["quantity added"]
           ),
+
         cost:
           cleanNumber(
             n["cost price"]
           ),
+
         selling:
           cleanNumber(
             n["selling price"]
           )
+
+      };
+
+    });
+
+
+
+    /* EXPENSES */
+
+    expenses = expensesData.map(row => {
+
+      const n = normalize(row);
+
+      const qty =
+        cleanNumber(
+          n["quantity"] ||
+          1
+        );
+
+      const unitCost =
+        cleanNumber(
+          n["unit cost"] ||
+          n["amount"] ||
+          0
+        );
+
+      return {
+
+        staff:
+          n["staff name"] || "-",
+
+        category:
+          n["category"] || "-",
+
+        item:
+          n["expense item"] || "-",
+
+        supplier:
+          n["supplier/vendor"] || "-",
+
+        qty,
+
+        unitCost,
+
+        total:
+          qty * unitCost
+
       };
 
     });
@@ -543,6 +734,8 @@ async function loadAllData() {
 
 
 
+/* XP */
+
 function staffXP() {
 
   let xp = {};
@@ -564,14 +757,16 @@ function staffXP() {
   orders.forEach(x => {
 
     if (
-      x.staff &&
       x.status &&
       x.status.toLowerCase() ===
       "completed"
     ) {
 
-      xp[x.staff] =
-        (xp[x.staff] || 0) + 15;
+      const staff =
+        x.uploadedBy || "Unknown";
+
+      xp[staff] =
+        (xp[staff] || 0) + 15;
 
     }
 
@@ -599,6 +794,8 @@ function staffXP() {
 
 
 
+/* RENDER */
+
 function render() {
 
   const salesTable =
@@ -606,6 +803,9 @@ function render() {
 
   const inventoryTable =
     document.getElementById("inventoryTable");
+
+  const expensesTable =
+    document.getElementById("expensesTable");
 
   const ordersTable =
     document.getElementById("ordersTable");
@@ -616,12 +816,10 @@ function render() {
   const leaderboard =
     document.getElementById("leaderboard");
 
-  const formLinks =
-    document.getElementById("formLinks");
 
 
+  /* SALES */
 
-  // SALES
   if (salesTable) {
 
     salesTable.innerHTML =
@@ -639,7 +837,8 @@ function render() {
 
 
 
-  // INVENTORY
+  /* INVENTORY */
+
   if (inventoryTable) {
 
     inventoryTable.innerHTML =
@@ -659,7 +858,29 @@ function render() {
 
 
 
-  // ORDERS
+  /* EXPENSES */
+
+  if (expensesTable) {
+
+    expensesTable.innerHTML =
+      expenses.map(x => `
+        <tr>
+          <td>${x.staff}</td>
+          <td>${x.category}</td>
+          <td>${x.item}</td>
+          <td>${x.supplier}</td>
+          <td>${x.qty}</td>
+          <td>${money(x.unitCost)}</td>
+          <td>${money(x.total)}</td>
+        </tr>
+      `).join("");
+
+  }
+
+
+
+  /* ORDERS */
+
   if (ordersTable) {
 
     ordersTable.innerHTML =
@@ -688,7 +909,8 @@ function render() {
 
 
 
-  // CUSTOMERS
+  /* CUSTOMERS */
+
   if (customersTable) {
 
     customersTable.innerHTML =
@@ -720,7 +942,8 @@ function render() {
 
 
 
-  // DASHBOARD
+  /* DASHBOARD */
+
   const totalSalesAmount =
     sales.reduce(
       (sum, item) =>
@@ -728,6 +951,18 @@ function render() {
         Number(item.amount || 0),
       0
     );
+
+  const totalExpensesAmount =
+    expenses.reduce(
+      (sum, item) =>
+        sum +
+        Number(item.total || 0),
+      0
+    );
+
+  const netProfitAmount =
+    totalSalesAmount -
+    totalExpensesAmount;
 
   const inventoryValueAmount =
     inventory.reduce(
@@ -740,16 +975,13 @@ function render() {
       0
     );
 
-  const lowStockCount =
-    inventory.filter(
-      item =>
-        item.quantity <= 5
-    ).length;
-
 
 
   const totalSales =
     document.getElementById("totalSales");
+
+  const totalExpenses =
+    document.getElementById("totalExpenses");
 
   const netProfit =
     document.getElementById("netProfit");
@@ -757,32 +989,28 @@ function render() {
   const inventoryValue =
     document.getElementById("inventoryValue");
 
-  const lowStock =
-    document.getElementById("lowStock");
-
 
 
   if (totalSales)
     totalSales.textContent =
       money(totalSalesAmount);
 
+  if (totalExpenses)
+    totalExpenses.textContent =
+      money(totalExpensesAmount);
+
   if (netProfit)
     netProfit.textContent =
-      money(totalSalesAmount);
+      money(netProfitAmount);
 
   if (inventoryValue)
     inventoryValue.textContent =
-      money(
-        inventoryValueAmount
-      );
-
-  if (lowStock)
-    lowStock.textContent =
-      lowStockCount;
+      money(inventoryValueAmount);
 
 
 
-  // STAFF XP
+  /* XP */
+
   if (leaderboard) {
 
     leaderboard.innerHTML =
@@ -799,74 +1027,9 @@ function render() {
             ${x.points} XP
           </strong>
         </div>
-      `).join("")
-      ||
-      "<p>No staff points yet.</p>";
-
-  }
-
-
-
-  // GOOGLE FORMS HUB
-  if (formLinks) {
-
-    let allowedForms =
-      window.TIMZY_FORMS || [];
-
-
-
-    if (
-      currentRole ===
-      "customer"
-    ) {
-
-      allowedForms =
-        allowedForms.filter(f =>
-          f.name.includes(
-            "Customer Measurement"
-          ) ||
-          f.name.includes(
-            "Order"
-          )
-        );
-
-    }
-
-
-
-    if (
-      currentRole ===
-      "staff"
-    ) {
-
-      allowedForms =
-        allowedForms.filter(f =>
-          f.name.includes(
-            "Sales"
-          ) ||
-          f.name.includes(
-            "Customer Measurement"
-          ) ||
-          f.name.includes(
-            "Order"
-          )
-        );
-
-    }
-
-
-
-    formLinks.innerHTML =
-      allowedForms.map(f => `
-        <div class="form-card">
-          <h3>${f.name}</h3>
-          <p>${f.description}</p>
-          <a href="${f.url}" target="_blank">
-            Open Form
-          </a>
-        </div>
       `).join("");
 
   }
 
 }
+```
