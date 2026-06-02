@@ -24,7 +24,7 @@
       <h1>Secure Login</h1>
 
       <p>
-        Access your dashboard, customer portal, orders, catalog, and operations tools.
+        Access your catalog, customer portal, orders, and business operations.
       </p>
 
       <input
@@ -249,6 +249,10 @@
       <section id="orders" class="tab">
         <h2>Orders</h2>
 
+        <p class="note">
+          Admin can approve or reject order requests. Customers can chat about their own orders.
+        </p>
+
         <div class="table-wrap">
           <table>
             <thead>
@@ -258,14 +262,36 @@
                 <th>Style</th>
                 <th>Status</th>
                 <th>Delivery</th>
-                <th>Amount</th>
-                <th>Deposit</th>
-                <th>Balance</th>
+                <th>Final Amount</th>
+                <th>Payment Method</th>
+                <th>Admin Note</th>
+                <th>Action</th>
               </tr>
             </thead>
 
             <tbody id="ordersTable"></tbody>
           </table>
+        </div>
+
+        <div id="chatBox" class="card chat-box" style="display:none;">
+          <h3>Order Communication Center</h3>
+
+          <div id="chatMessages" class="chat-messages"></div>
+
+          <div class="chat-input-row">
+            <input
+              id="chatInput"
+              type="text"
+              placeholder="Type your message..."
+            />
+
+            <button
+              type="button"
+              onclick="sendChatMessage()"
+            >
+              Send
+            </button>
+          </div>
         </div>
       </section>
 
@@ -323,8 +349,18 @@
               <input id="coPhone" placeholder="Phone Number" />
               <input id="coStyle" placeholder="Product / Style" />
               <input id="coDelivery" type="date" />
-              <input id="coAmount" type="number" placeholder="Final Amount — Optional" />
-              <input id="coDeposit" type="number" placeholder="Deposit — Optional" />
+
+              <input
+                id="coAmount"
+                type="number"
+                placeholder="Final Amount — Admin can confirm later"
+              />
+
+              <select id="coPaymentMethod">
+                <option value="">Select Payment Method</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+              </select>
 
               <button type="button" onclick="submitOrder()">
                 Submit Order Request
@@ -364,14 +400,36 @@
                 <th>Style</th>
                 <th>Status</th>
                 <th>Delivery</th>
-                <th>Amount</th>
-                <th>Deposit</th>
-                <th>Balance</th>
+                <th>Final Amount</th>
+                <th>Payment Method</th>
+                <th>Admin Note</th>
+                <th>Action</th>
               </tr>
             </thead>
 
             <tbody id="customerOrdersTable"></tbody>
           </table>
+        </div>
+
+        <div id="customerChatBox" class="card chat-box" style="display:none;">
+          <h3>Order Chat</h3>
+
+          <div id="customerChatMessages" class="chat-messages"></div>
+
+          <div class="chat-input-row">
+            <input
+              id="customerChatInput"
+              type="text"
+              placeholder="Type your message..."
+            />
+
+            <button
+              type="button"
+              onclick="sendChatMessage()"
+            >
+              Send
+            </button>
+          </div>
         </div>
       </section>
 
