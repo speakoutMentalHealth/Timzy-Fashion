@@ -205,8 +205,8 @@ function hideAllSections() {
 function showRoleSections(sectionIds) {
   sectionIds.forEach(id => {
     const section = document.getElementById(id);
-    const button = document.querySelector(`button[onclick="showTab('${id}')"]`);
-
+    const button = document.querySelector(`button[onclick*="showTab('${id}')"]`);
+    
     if (section) section.style.display = "";
     if (button) button.style.display = "inline-block";
   });
