@@ -1,322 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Timzy Fashion OS</title>
-
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-  <!-- LOGIN PAGE -->
   <div id="loginPage" class="login-page">
     <div class="login-card">
       <p class="eyebrow">TIMZY FASHION OS</p>
-
       <h1>Secure Login</h1>
+      <p>Access your catalog, customer portal, orders, chats, and business tools.</p>
 
-      <p>
-        Access your catalog, customer portal, orders, and business operations.
-      </p>
+      <input id="loginEmail" type="email" placeholder="Enter Email" autocomplete="email" />
+      <input id="loginPassword" type="password" placeholder="Enter Password" autocomplete="current-password" />
 
-      <input
-        id="loginEmail"
-        type="email"
-        placeholder="Enter Email"
-        autocomplete="email"
-      />
-
-      <input
-        id="loginPassword"
-        type="password"
-        placeholder="Enter Password"
-        autocomplete="current-password"
-      />
-
-      <button type="button" onclick="loginUser()">
-        Login
-      </button>
+      <button type="button" onclick="loginUser()">Login</button>
     </div>
   </div>
 
-
-  <!-- MAIN APP -->
   <div id="app" style="display:none;">
 
-    <!-- HERO -->
     <header class="hero">
       <div>
         <p class="eyebrow">TIMZY FASHION OS</p>
-
         <h1>Business Command Center</h1>
-
-        <p>
-          Catalog • Sales • Expenses • Inventory • Orders • Customers • Staff XP
-        </p>
+        <p>Catalog • Orders • Customers • Expenses • Inventory • Staff XP</p>
       </div>
 
       <div class="xp-card">
         <span>Business Health</span>
-
         <strong id="healthScore">85%</strong>
-
-        <div class="bar">
-          <i style="width:85%"></i>
-        </div>
-
-        <br>
-
-        <button type="button" onclick="logoutUser()">
-          Logout
-        </button>
+        <div class="bar"><i style="width:85%"></i></div>
+        <br />
+        <button type="button" onclick="logoutUser()">Logout</button>
       </div>
     </header>
 
-
-    <!-- NAVIGATION -->
     <nav class="nav-buttons">
-
-      <button id="dashboardBtn" type="button" onclick="showTab('dashboard')">
-        🏠 Dashboard
-      </button>
-
-      <button id="catalogBtn" type="button" onclick="showTab('catalog')">
-        🛍️ Catalog
-      </button>
-
-      <button id="salesBtn" type="button" onclick="showTab('sales')">
-        💰 Sales
-      </button>
-
-      <button id="expensesBtn" type="button" onclick="showTab('expenses')">
-        💸 Expenses
-      </button>
-
-      <button id="inventoryBtn" type="button" onclick="showTab('inventory')">
-        📦 Inventory
-      </button>
-
-      <button id="ordersBtn" type="button" onclick="showTab('orders')">
-        🧵 Orders
-      </button>
-
-      <button id="customersBtn" type="button" onclick="showTab('customers')">
-        👗 Customers
-      </button>
-
-      <button id="staffBtn" type="button" onclick="showTab('staff')">
-        🏆 Staff XP
-      </button>
-
-      <button id="formsBtn" type="button" onclick="showTab('forms')">
-        📝 Google Forms
-      </button>
-
+      <button id="dashboardBtn" type="button" onclick="showTab('dashboard')">🏠 Dashboard</button>
+      <button id="catalogBtn" type="button" onclick="showTab('catalog')">🛍️ Catalog</button>
+      <button id="catalogManagerBtn" type="button" onclick="showTab('catalogManager')">🖼️ Catalog Manager</button>
+      <button id="salesBtn" type="button" onclick="showTab('sales')">💰 Sales</button>
+      <button id="expensesBtn" type="button" onclick="showTab('expenses')">💸 Expenses</button>
+      <button id="inventoryBtn" type="button" onclick="showTab('inventory')">📦 Inventory</button>
+      <button id="ordersBtn" type="button" onclick="showTab('orders')">🧵 Orders</button>
+      <button id="customersBtn" type="button" onclick="showTab('customers')">👗 Customers</button>
+      <button id="staffBtn" type="button" onclick="showTab('staff')">🏆 Staff XP</button>
+      <button id="formsBtn" type="button" onclick="showTab('forms')">📝 Google Forms</button>
     </nav>
-
 
     <main>
 
-      <!-- DASHBOARD -->
       <section id="dashboard" class="tab active">
         <h2>Executive Dashboard</h2>
 
         <div class="cards">
-
-          <div class="card">
-            <span>Total Sales</span>
-            <strong id="totalSales">₦0</strong>
-          </div>
-
-          <div class="card">
-            <span>Total Expenses</span>
-            <strong id="totalExpenses">₦0</strong>
-          </div>
-
-          <div class="card">
-            <span>Net Profit</span>
-            <strong id="netProfit">₦0</strong>
-          </div>
-
-          <div class="card">
-            <span>Inventory Value</span>
-            <strong id="inventoryValue">₦0</strong>
-          </div>
-
-          <div class="card warning">
-            <span>Low Stock</span>
-            <strong id="lowStock">0</strong>
-          </div>
-
+          <div class="card"><span>Total Sales</span><strong id="totalSales">₦0</strong></div>
+          <div class="card"><span>Total Expenses</span><strong id="totalExpenses">₦0</strong></div>
+          <div class="card"><span>Net Profit</span><strong id="netProfit">₦0</strong></div>
+          <div class="card"><span>Inventory Value</span><strong id="inventoryValue">₦0</strong></div>
+          <div class="card warning"><span>Low Stock</span><strong id="lowStock">0</strong></div>
         </div>
       </section>
 
-
-      <!-- CATALOG -->
       <section id="catalog" class="tab">
         <h2>Customer Product Catalog</h2>
-
-        <p class="note">
-          View available Timzy Fashion products in real time. Select a product to request an order.
-        </p>
-
-        <div
-          id="catalogGrid"
-          class="catalog-grid"
-        ></div>
+        <p class="note">View products, colors, pictures, and request an order.</p>
+        <div id="catalogGrid" class="catalog-grid"></div>
       </section>
 
+      <section id="catalogManager" class="tab">
+        <h2>Catalog Manager</h2>
+        <p class="note">Admin can add product images, colors, sizes, and descriptions here.</p>
 
-      <!-- SALES -->
+        <div class="card">
+          <h3>Add / Publish Product</h3>
+
+          <form>
+            <input id="catProductName" placeholder="Product Name" />
+            <input id="catCategory" placeholder="Category" />
+            <input id="catColor" placeholder="Color / Material Color" />
+            <input id="catPrice" type="number" placeholder="Price" />
+            <input id="catQuantity" type="number" placeholder="Available Quantity" />
+            <input id="catSizes" placeholder="Sizes e.g. S, M, L, XL" />
+            <input id="catImage1" placeholder="Image URL 1" />
+            <input id="catImage2" placeholder="Image URL 2" />
+            <input id="catImage3" placeholder="Image URL 3" />
+            <textarea id="catDescription" placeholder="Product Description"></textarea>
+
+            <button type="button" onclick="saveCatalogProduct()">Publish Product</button>
+          </form>
+        </div>
+      </section>
+
       <section id="sales" class="tab">
         <h2>Sales Records</h2>
-
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>Staff</th>
-                <th>Category</th>
-                <th>Product</th>
-                <th>Qty</th>
-                <th>Amount</th>
-              </tr>
+              <tr><th>Staff</th><th>Category</th><th>Product</th><th>Qty</th><th>Amount</th></tr>
             </thead>
-
             <tbody id="salesTable"></tbody>
           </table>
         </div>
       </section>
 
-
-      <!-- EXPENSES -->
       <section id="expenses" class="tab">
         <h2>Expenses</h2>
+        <p class="note">Staff can record and view expenses. Admin can view all expenses.</p>
 
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>Staff</th>
-                <th>Category</th>
-                <th>Expense Item</th>
-                <th>Supplier</th>
-                <th>Qty</th>
-                <th>Unit Cost</th>
-                <th>Total</th>
-              </tr>
+              <tr><th>Staff</th><th>Category</th><th>Expense Item</th><th>Supplier</th><th>Qty</th><th>Unit Cost</th><th>Total</th></tr>
             </thead>
-
             <tbody id="expensesTable"></tbody>
           </table>
         </div>
       </section>
 
-
-      <!-- INVENTORY -->
       <section id="inventory" class="tab">
         <h2>Inventory Control</h2>
-
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>Category</th>
-                <th>Product</th>
-                <th>SKU</th>
-                <th>Supplier</th>
-                <th>Qty Added</th>
-                <th>Cost Price</th>
-                <th>Selling Price</th>
-              </tr>
+              <tr><th>Category</th><th>Product</th><th>SKU</th><th>Supplier</th><th>Qty Added</th><th>Cost Price</th><th>Selling Price</th></tr>
             </thead>
-
             <tbody id="inventoryTable"></tbody>
           </table>
         </div>
       </section>
 
-
-      <!-- ORDERS -->
       <section id="orders" class="tab">
         <h2>Orders</h2>
-
-        <p class="note">
-          Admin can approve or reject order requests. Customers can chat about their own orders.
-        </p>
+        <p class="note">Admin can approve/reject orders. Customers, staff, and admin can chat on each order.</p>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Customer</th>
-                <th>Phone</th>
-                <th>Style</th>
-                <th>Status</th>
-                <th>Delivery</th>
-                <th>Final Amount</th>
-                <th>Payment Method</th>
-                <th>Admin Note</th>
-                <th>Action</th>
+                <th>Customer</th><th>Phone</th><th>Style</th><th>Status</th><th>Delivery</th>
+                <th>Final Amount</th><th>Payment Method</th><th>Admin Note</th><th>Action</th>
               </tr>
             </thead>
-
             <tbody id="ordersTable"></tbody>
           </table>
         </div>
 
         <div id="chatBox" class="card chat-box" style="display:none;">
           <h3>Order Communication Center</h3>
-
           <div id="chatMessages" class="chat-messages"></div>
-
           <div class="chat-input-row">
-            <input
-              id="chatInput"
-              type="text"
-              placeholder="Type your message..."
-            />
-
-            <button
-              type="button"
-              onclick="sendChatMessage()"
-            >
-              Send
-            </button>
+            <input id="chatInput" type="text" placeholder="Type your message..." />
+            <button type="button" onclick="sendChatMessage()">Send</button>
           </div>
         </div>
       </section>
 
-
-      <!-- CUSTOMERS -->
       <section id="customers" class="tab">
         <h2>Customer Portal</h2>
-
-        <p class="note">
-          Customers can submit their own measurements and order requests. Staff/Admin can submit records for customers using the customer email field.
-        </p>
+        <p class="note">Customers see only their own measurements and orders. Staff/Admin can submit records for customers using email.</p>
 
         <div class="cards">
-
           <div class="card">
             <h3>Submit Measurement</h3>
-
             <form>
-              <input
-                id="targetCustomerEmail"
-                class="staff-admin-only"
-                type="email"
-                placeholder="Customer Email — Staff/Admin only"
-              />
-
+              <input id="targetCustomerEmail" class="staff-admin-only" type="email" placeholder="Customer Email — Staff/Admin only" />
               <input id="cmName" placeholder="Customer Name" />
               <input id="cmPhone" placeholder="Phone Number" />
               <input id="cmShoulder" placeholder="Shoulder" />
@@ -325,158 +178,90 @@
               <input id="cmHip" placeholder="Hip" />
               <input id="cmSleeve" placeholder="Sleeve" />
               <input id="cmLength" placeholder="Length" />
-              <input id="cmNotes" placeholder="Style Notes" />
-
-              <button type="button" onclick="submitMeasurement()">
-                Save Measurement
-              </button>
+              <textarea id="cmNotes" placeholder="Style Notes"></textarea>
+              <button type="button" onclick="submitMeasurement()">Save Measurement</button>
             </form>
           </div>
 
-
           <div class="card">
             <h3>Submit Order Request</h3>
-
             <form>
-              <input
-                id="targetCustomerEmailOrder"
-                class="staff-admin-only"
-                type="email"
-                placeholder="Customer Email — Staff/Admin only"
-              />
-
+              <input id="targetCustomerEmailOrder" class="staff-admin-only" type="email" placeholder="Customer Email — Staff/Admin only" />
               <input id="coName" placeholder="Customer Name" />
               <input id="coPhone" placeholder="Phone Number" />
               <input id="coStyle" placeholder="Product / Style" />
               <input id="coDelivery" type="date" />
-
-              <input
-                id="coAmount"
-                type="number"
-                placeholder="Final Amount — Admin can confirm later"
-              />
-
+              <input id="coAmount" type="number" placeholder="Final Amount — Admin can confirm later" />
               <select id="coPaymentMethod">
                 <option value="">Select Payment Method</option>
                 <option value="Cash">Cash</option>
                 <option value="Bank Transfer">Bank Transfer</option>
               </select>
-
-              <button type="button" onclick="submitOrder()">
-                Submit Order Request
-              </button>
+              <button type="button" onclick="submitOrder()">Submit Order Request</button>
             </form>
           </div>
-
         </div>
 
-
         <h3>Measurements</h3>
-
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Measurements</th>
-                <th>Style Notes</th>
-              </tr>
+              <tr><th>Name</th><th>Phone</th><th>Measurements</th><th>Style Notes</th></tr>
             </thead>
-
             <tbody id="customersTable"></tbody>
           </table>
         </div>
 
-
         <h3>Orders</h3>
-
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Customer</th>
-                <th>Phone</th>
-                <th>Style</th>
-                <th>Status</th>
-                <th>Delivery</th>
-                <th>Final Amount</th>
-                <th>Payment Method</th>
-                <th>Admin Note</th>
-                <th>Action</th>
+                <th>Customer</th><th>Phone</th><th>Style</th><th>Status</th><th>Delivery</th>
+                <th>Final Amount</th><th>Payment Method</th><th>Admin Note</th><th>Action</th>
               </tr>
             </thead>
-
             <tbody id="customerOrdersTable"></tbody>
           </table>
         </div>
 
         <div id="customerChatBox" class="card chat-box" style="display:none;">
           <h3>Order Chat</h3>
-
           <div id="customerChatMessages" class="chat-messages"></div>
-
           <div class="chat-input-row">
-            <input
-              id="customerChatInput"
-              type="text"
-              placeholder="Type your message..."
-            />
-
-            <button
-              type="button"
-              onclick="sendChatMessage()"
-            >
-              Send
-            </button>
+            <input id="customerChatInput" type="text" placeholder="Type your message..." />
+            <button type="button" onclick="sendChatMessage()">Send</button>
           </div>
         </div>
       </section>
 
-
-      <!-- STAFF -->
       <section id="staff" class="tab">
         <h2>Staff XP Leaderboard</h2>
-
-        <div
-          id="leaderboard"
-          class="leaderboard"
-        ></div>
+        <div id="leaderboard" class="leaderboard"></div>
       </section>
 
-
-      <!-- FORMS -->
       <section id="forms" class="tab">
         <h2>Google Forms Hub</h2>
-
-        <p class="note">
-          Internal Google Forms remain available for admin/staff operations.
-        </p>
-
-        <div
-          class="form-grid"
-          id="formLinks"
-        ></div>
+        <p class="note">Internal Google Forms remain available for admin/staff operations.</p>
+        <div class="form-grid" id="formLinks"></div>
       </section>
 
     </main>
 
+    <div id="productModal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <button class="modal-close" type="button" onclick="closeProductModal()">×</button>
+        <div id="modalProductContent"></div>
+      </div>
+    </div>
 
     <footer>
       <p>Timzy Fashion OS Cloud Edition</p>
     </footer>
-
   </div>
 
-
-  <!-- SCRIPTS -->
   <script src="forms-config.js"></script>
-
-  <script
-    type="module"
-    src="script.js"
-  ></script>
+  <script type="module" src="script.js"></script>
 
 </body>
-
 </html>
