@@ -322,7 +322,12 @@ tr:hover{
   border-radius:12px;
 }
 
-/* Catalog */
+.catalog-tools{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:12px;
+  margin:18px 0;
+}
 
 .catalog-grid{
   display:grid;
@@ -376,7 +381,21 @@ tr:hover{
   width:100%;
 }
 
-/* Modal */
+.whatsapp-btn{
+  display:block;
+  text-align:center;
+  background:var(--green);
+  color:#111;
+  font-weight:800;
+  text-decoration:none;
+  padding:12px 18px;
+  border-radius:14px;
+}
+
+.danger-btn{
+  background:var(--red);
+  color:white;
+}
 
 .modal{
   position:fixed;
@@ -410,20 +429,20 @@ tr:hover{
 
 .product-gallery{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  grid-template-columns:1fr;
   gap:12px;
   margin:18px 0;
 }
 
 .product-gallery img{
   width:100%;
-  height:260px;
-  object-fit:cover;
+  max-height:650px;
+  height:auto;
+  object-fit:contain;
+  background:#111;
   border-radius:18px;
   border:1px solid #333;
 }
-
-/* Chat */
 
 .chat-box{
   margin-top:22px;
@@ -507,7 +526,8 @@ footer{
     font-size:13px;
   }
 
-  .chat-input-row{
+  .chat-input-row,
+  .catalog-tools{
     grid-template-columns:1fr;
   }
 }
@@ -538,6 +558,6 @@ footer{
   }
 
   .product-gallery img{
-    height:210px;
+    max-height:520px;
   }
 }
