@@ -78,9 +78,27 @@ async function getUserRole(email) {
   return "customer";
 }
 
-/* PUBLIC / LOGIN CONTROLS */
+function hidePublicView() {
+  const publicHeader = document.getElementById("publicHeader");
+  const publicCatalog = document.getElementById("publicCatalog");
+
+  if (publicHeader) publicHeader.style.display = "none";
+  if (publicCatalog) publicCatalog.style.display = "none";
+}
+
+function showPublicView() {
+  const publicHeader = document.getElementById("publicHeader");
+  const publicCatalog = document.getElementById("publicCatalog");
+  const appView = document.getElementById("app");
+
+  if (publicHeader) publicHeader.style.display = "grid";
+  if (publicCatalog) publicCatalog.style.display = "block";
+  if (appView) appView.style.display = "none";
+}
 
 window.openLoginModal = function () {
+  closeAccessModal();
+
   const modal = document.getElementById("loginModal");
   if (modal) modal.style.display = "flex";
 };
@@ -105,8 +123,6 @@ window.closeAccessModal = function () {
   if (modal) modal.style.display = "none";
 };
 
-/* AUTH */
-
 window.loginUser = async function () {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
@@ -127,9 +143,10 @@ window.logoutUser = async function () {
   currentRole = "public";
   currentUserEmail = "";
 
-  const appView = document.getElementById("app");
-  if (appView) appView.style.display = "none";
+  closeLoginModal();
+  closeAccessModal();
 
+  showPublicView();
   render();
 };
 
@@ -140,9 +157,12 @@ onAuthStateChanged(auth, async user => {
     currentUserEmail = user.email.toLowerCase();
     currentRole = await getUserRole(currentUserEmail);
 
+    closeLoginModal();
+    closeAccessModal();
+    hidePublicView();
+
     if (appView) appView.style.display = "block";
 
-    closeLoginModal();
     setupRoleAccess();
     await loadFirestoreData();
     render();
@@ -150,13 +170,10 @@ onAuthStateChanged(auth, async user => {
     currentUserEmail = "";
     currentRole = "public";
 
-    if (appView) appView.style.display = "none";
-
+    showPublicView();
     render();
   }
 });
-
-/* ROLE ROUTING */
 
 function setupRoleAccess() {
   hideAllSections();
@@ -174,6 +191,7 @@ function setupRoleAccess() {
       "staff",
       "forms"
     ]);
+
     showStaffAdminFields(true);
     showTab("dashboard");
     return;
@@ -188,6 +206,7 @@ function setupRoleAccess() {
       "customers",
       "forms"
     ]);
+
     showStaffAdminFields(true);
     showTab("catalog");
     return;
@@ -235,8 +254,6 @@ window.showTab = function (id) {
   const selected = document.getElementById(id);
   if (selected) selected.classList.add("active");
 };
-
-/* DATA LOADING */
 
 async function fetchSheet(api) {
   try {
@@ -394,8 +411,6 @@ async function loadFirestoreData() {
   }));
 }
 
-/* CATALOG MANAGER */
-
 window.saveCatalogProduct = async function () {
   if (currentRole !== "admin") {
     alert("Only admin can publish catalog products.");
@@ -425,7 +440,19 @@ window.saveCatalogProduct = async function () {
   await addDoc(collection(db, "catalog"), product);
 
   alert("Product published successfully.");
-  clearCatalogForm();
+  clearInputs([
+    "catProductName",
+    "catCategory",
+    "catColor",
+    "catPrice",
+    "catQuantity",
+    "catSizes",
+    "catImage1",
+    "catImage2",
+    "catImage3",
+    "catDescription"
+  ]);
+
   await loadAllData();
 };
 
@@ -446,26 +473,6 @@ window.deleteCatalogProduct = async function (productId) {
   alert("Product deleted.");
   await loadAllData();
 };
-
-function clearCatalogForm() {
-  [
-    "catProductName",
-    "catCategory",
-    "catColor",
-    "catPrice",
-    "catQuantity",
-    "catSizes",
-    "catImage1",
-    "catImage2",
-    "catImage3",
-    "catDescription"
-  ].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-  });
-}
-
-/* CUSTOMER ACTIONS */
 
 function getTargetCustomerEmail(inputId) {
   if (currentRole === "customer") return currentUserEmail;
@@ -503,6 +510,7 @@ window.submitMeasurement = async function () {
 
     alert("Measurement saved successfully.");
     clearInputs(["cmName", "cmPhone", "cmShoulder", "cmChest", "cmWaist", "cmHip", "cmSleeve", "cmLength", "cmNotes"]);
+
     await loadFirestoreData();
     render();
   } catch (error) {
@@ -532,6 +540,7 @@ window.submitOrder = async function () {
 
     alert("Order request submitted successfully.");
     clearInputs(["coName", "coPhone", "coStyle", "coDelivery", "coAmount", "coPaymentMethod"]);
+
     await loadFirestoreData();
     render();
   } catch (error) {
@@ -553,11 +562,6 @@ window.requestCatalogOrder = function (productName, price = "") {
     return;
   }
 
-  if (currentRole !== "customer" && currentRole !== "staff" && currentRole !== "admin") {
-    openAccessModal();
-    return;
-  }
-
   showTab("customers");
 
   const styleInput = document.getElementById("coStyle");
@@ -569,14 +573,7 @@ window.requestCatalogOrder = function (productName, price = "") {
   alert("Product selected. Complete your order request below.");
 };
 
-/* PRODUCT MODAL */
-
 window.openProductDetails = function (encodedProduct) {
-  if (currentRole === "public") {
-    openAccessModal();
-    return;
-  }
-
   const product = JSON.parse(decodeURIComponent(encodedProduct));
   const modal = document.getElementById("productModal");
   const content = document.getElementById("modalProductContent");
@@ -621,8 +618,6 @@ window.closeProductModal = function () {
   const modal = document.getElementById("productModal");
   if (modal) modal.style.display = "none";
 };
-
-/* ORDERS + CHAT */
 
 window.approveOrder = async function (orderId) {
   if (currentRole !== "admin") {
@@ -730,8 +725,6 @@ window.sendChatMessage = async function () {
   input.value = "";
 };
 
-/* DASHBOARD ANALYTICS */
-
 function dashboardStats() {
   const totalSalesAmount = sales.reduce((sum, item) => sum + Number(item.amount || 0), 0);
   const totalExpensesAmount = expenses.reduce((sum, item) => sum + Number(item.total || 0), 0);
@@ -761,11 +754,13 @@ function drawBarChart(containerId, labels, values) {
   if (!container) return;
 
   container.innerHTML = `<canvas></canvas>`;
+
   const canvas = container.querySelector("canvas");
   const ctx = canvas.getContext("2d");
 
   const width = container.clientWidth || 400;
   const height = 240;
+
   canvas.width = width;
   canvas.height = height;
 
@@ -774,7 +769,6 @@ function drawBarChart(containerId, labels, values) {
 
   ctx.clearRect(0, 0, width, height);
   ctx.font = "12px Arial";
-  ctx.fillStyle = "#9d9d9d";
 
   values.forEach((value, i) => {
     const x = i * (barWidth + 22) + 20;
@@ -810,11 +804,12 @@ function renderDashboardCharts() {
 
   drawBarChart(
     "inventoryHealthChart",
-    ["Value", "Low Stock"],
+    ["Value", "Low"],
     [stats.inventoryValueAmount, stats.lowStockCount]
   );
 
   const xp = staffXP().slice(0, 5);
+
   drawBarChart(
     "staffPerformanceChart",
     xp.length ? xp.map(x => x.name.slice(0, 8)) : ["No XP"],
@@ -846,8 +841,6 @@ function renderActivityPanels() {
     `).join("") || `<p class="note">No critical alerts.</p>`;
   }
 }
-
-/* RENDERING */
 
 function staffXP() {
   let xp = {};
@@ -929,8 +922,14 @@ function renderCatalog(targetId, searchId, categoryId) {
               <small>Available: ${item.quantity || "Check stock"}</small>
 
               <button type="button" onclick='openProductDetails("${encoded}")'>View Details</button>
-              <button type="button" onclick='requestCatalogOrder(${JSON.stringify(item.name)}, ${JSON.stringify(item.price || "")})'>Request Order</button>
-              <a class="whatsapp-btn" href="${whatsappLink}" target="_blank">WhatsApp Order</a>
+
+              <button type="button" onclick='requestCatalogOrder(${JSON.stringify(item.name)}, ${JSON.stringify(item.price || "")})'>
+                Request Order
+              </button>
+
+              <a class="whatsapp-btn" href="${whatsappLink}" target="_blank">
+                WhatsApp Order
+              </a>
 
               ${
                 currentRole === "admin" && !String(item.id).startsWith("inventory-")
@@ -959,21 +958,43 @@ window.render = function () {
   const salesTable = document.getElementById("salesTable");
   if (salesTable) {
     salesTable.innerHTML = sales.map(x => `
-      <tr><td>${x.staff}</td><td>${x.category}</td><td>${x.product}</td><td>${x.qty}</td><td>${money(x.amount)}</td></tr>
+      <tr>
+        <td>${x.staff}</td>
+        <td>${x.category}</td>
+        <td>${x.product}</td>
+        <td>${x.qty}</td>
+        <td>${money(x.amount)}</td>
+      </tr>
     `).join("");
   }
 
   const expensesTable = document.getElementById("expensesTable");
   if (expensesTable) {
     expensesTable.innerHTML = expenses.map(x => `
-      <tr><td>${x.staff}</td><td>${x.category}</td><td>${x.item}</td><td>${x.supplier}</td><td>${x.qty}</td><td>${money(x.unitCost)}</td><td>${money(x.total)}</td></tr>
+      <tr>
+        <td>${x.staff}</td>
+        <td>${x.category}</td>
+        <td>${x.item}</td>
+        <td>${x.supplier}</td>
+        <td>${x.qty}</td>
+        <td>${money(x.unitCost)}</td>
+        <td>${money(x.total)}</td>
+      </tr>
     `).join("");
   }
 
   const inventoryTable = document.getElementById("inventoryTable");
   if (inventoryTable) {
     inventoryTable.innerHTML = inventory.map(x => `
-      <tr><td>${x.category}</td><td>${x.product}</td><td>${x.sku}</td><td>${x.supplier}</td><td>${x.quantity}</td><td>${money(x.cost)}</td><td>${money(x.selling)}</td></tr>
+      <tr>
+        <td>${x.category}</td>
+        <td>${x.product}</td>
+        <td>${x.sku}</td>
+        <td>${x.supplier}</td>
+        <td>${x.quantity}</td>
+        <td>${money(x.cost)}</td>
+        <td>${money(x.selling)}</td>
+      </tr>
     `).join("");
   }
 
@@ -989,7 +1010,13 @@ window.render = function () {
         <td>${x.paymentMethod || "-"}</td>
         <td>${x.adminNote || "-"}</td>
         <td>
-          ${currentRole === "admin" ? `<button type="button" onclick="approveOrder('${x.id}')">Approve</button><button type="button" onclick="rejectOrder('${x.id}')">Reject</button>` : ""}
+          ${
+            currentRole === "admin"
+              ? `<button type="button" onclick="approveOrder('${x.id}')">Approve</button>
+                 <button type="button" onclick="rejectOrder('${x.id}')">Reject</button>`
+              : ""
+          }
+
           <button type="button" onclick="openOrderChat('${x.id}')">Chat</button>
         </td>
       </tr>
@@ -1006,7 +1033,14 @@ window.render = function () {
         <tr>
           <td>${x.name || "-"}</td>
           <td>${x.phone || "-"}</td>
-          <td>Shoulder: ${x.shoulder || "-"}<br>Chest: ${x.chest || "-"}<br>Waist: ${x.waist || "-"}<br>Hip: ${x.hip || "-"}<br>Sleeve: ${x.sleeve || "-"}<br>Length: ${x.length || "-"}</td>
+          <td>
+            Shoulder: ${x.shoulder || "-"}<br>
+            Chest: ${x.chest || "-"}<br>
+            Waist: ${x.waist || "-"}<br>
+            Hip: ${x.hip || "-"}<br>
+            Sleeve: ${x.sleeve || "-"}<br>
+            Length: ${x.length || "-"}
+          </td>
           <td>${x.notes || "-"}</td>
         </tr>
       `).join("")
@@ -1051,5 +1085,4 @@ window.render = function () {
   renderActivityPanels();
 };
 
-/* START PUBLIC APP */
 loadAllData();
