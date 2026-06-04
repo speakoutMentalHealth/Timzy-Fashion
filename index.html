@@ -10,22 +10,23 @@
 
 <body>
 
-  <!-- PUBLIC APP HEADER -->
-  <header class="public-header">
+  <!-- PUBLIC VIEW -->
+  <header id="publicHeader" class="public-header">
     <div>
       <p class="eyebrow">TIMZY FASHION OS</p>
-      <h1>Modern Fashion Catalog & Business OS</h1>
+      <h1>Timzy Fashion Catalog</h1>
       <p>
-        Browse available products, view styles, and request customer access to place orders.
+        Browse available styles, view product details, and request customer access to place orders or save your measurements.
       </p>
     </div>
 
     <div class="public-actions">
       <button type="button" onclick="showPublicCatalog()">🛍️ Catalog</button>
       <button type="button" onclick="openLoginModal()">🔐 Login</button>
+
       <a
         class="whatsapp-btn"
-        href="https://wa.me/2348118103510?text=Hello,%20I%20need%20customer%20login%20details%20for%20Timzy%20Fashion%20OS"
+        href="https://wa.me/2348118103510?text=Hello,%20I%20want%20my%20login%20details%20into%20the%20Timzy%20Fashion%20OS"
         target="_blank"
       >
         Request Access
@@ -34,13 +35,12 @@
   </header>
 
 
-  <!-- PUBLIC CATALOG -->
   <section id="publicCatalog" class="public-section">
     <div class="section-head">
       <div>
         <h2>Product Catalog</h2>
         <p class="note">
-          View available Timzy Fashion products before logging in.
+          View available products. Login is required to place an order and save personal measurements.
         </p>
       </div>
     </div>
@@ -78,7 +78,7 @@
       <h2>Access Timzy Fashion OS</h2>
 
       <p class="note">
-        Admin, staff, and customers should log in here.
+        Login as admin, staff, or customer.
       </p>
 
       <input
@@ -100,14 +100,40 @@
       </button>
 
       <p class="note">
-        Need customer login details?
+        Need login details?
         <a
-          href="https://wa.me/2348118103510?text=Hello,%20I%20need%20customer%20login%20details%20for%20Timzy%20Fashion%20OS"
+          href="https://wa.me/2348118103510?text=Hello,%20I%20want%20my%20login%20details%20into%20the%20Timzy%20Fashion%20OS"
           target="_blank"
         >
-          Contact Timzy Fashion
+          Request access on WhatsApp
         </a>
       </p>
+    </div>
+  </div>
+
+
+  <!-- ACCESS REQUIRED MODAL -->
+  <div id="accessModal" class="modal" style="display:none;">
+    <div class="modal-content login-modal-card">
+      <button class="modal-close" type="button" onclick="closeAccessModal()">×</button>
+
+      <h2>Customer Login Required</h2>
+
+      <p class="note">
+        Please sign in as a customer to place orders, chat with Timzy Fashion, and save your personal measurements for future sewing.
+      </p>
+
+      <a
+        class="whatsapp-btn"
+        href="https://wa.me/2348118103510?text=Hello,%20I%20want%20my%20login%20details%20into%20the%20Timzy%20Fashion%20OS"
+        target="_blank"
+      >
+        Request Login Details
+      </a>
+
+      <button type="button" onclick="openLoginModal()">
+        I Already Have Login
+      </button>
     </div>
   </div>
 
@@ -115,13 +141,12 @@
   <!-- PRIVATE APP -->
   <div id="app" style="display:none;">
 
-    <!-- PRIVATE HERO -->
     <header class="hero">
       <div>
         <p class="eyebrow">TIMZY FASHION OS</p>
         <h1>Business Command Center</h1>
         <p>
-          Technical dashboard • Catalog • Orders • Customers • Expenses • Inventory
+          Catalog • Customers • Orders • Inventory • Expenses • Staff Operations
         </p>
       </div>
 
@@ -142,7 +167,6 @@
     </header>
 
 
-    <!-- PRIVATE NAV -->
     <nav class="nav-buttons">
       <button id="dashboardBtn" type="button" onclick="showTab('dashboard')">📊 Dashboard</button>
       <button id="catalogBtn" type="button" onclick="showTab('catalog')">🛍️ Catalog</button>
@@ -159,13 +183,13 @@
 
     <main>
 
-      <!-- TECHNICAL DASHBOARD -->
+      <!-- DASHBOARD -->
       <section id="dashboard" class="tab active">
         <div class="dashboard-head">
           <div>
             <h2>Executive Intelligence Dashboard</h2>
             <p class="note">
-              Live overview of sales, expenses, inventory, orders, and operational health.
+              Live overview of sales, expenses, stock, order activity, and operational health.
             </p>
           </div>
 
@@ -211,73 +235,45 @@
           <div class="analytics-card">
             <div class="chart-header">
               <h3>Sales vs Expenses</h3>
-              <span>Financial signal</span>
+              <span>Financial Signal</span>
             </div>
-
-            <div id="financeChart" class="chart-box">
-              <div class="chart-placeholder">
-                <span>📈</span>
-                <p>Chart will render from live sales and expense data.</p>
-              </div>
-            </div>
+            <div id="financeChart" class="chart-box"></div>
           </div>
 
           <div class="analytics-card">
             <div class="chart-header">
               <h3>Order Status</h3>
-              <span>Pipeline health</span>
+              <span>Pipeline Health</span>
             </div>
-
-            <div id="orderStatusChart" class="chart-box">
-              <div class="chart-placeholder">
-                <span>🧵</span>
-                <p>Pending, approved, and rejected orders will appear here.</p>
-              </div>
-            </div>
+            <div id="orderStatusChart" class="chart-box"></div>
           </div>
 
           <div class="analytics-card">
             <div class="chart-header">
               <h3>Inventory Health</h3>
-              <span>Stock intelligence</span>
+              <span>Stock Intelligence</span>
             </div>
-
-            <div id="inventoryHealthChart" class="chart-box">
-              <div class="chart-placeholder">
-                <span>📦</span>
-                <p>Stock value and low-stock signals will appear here.</p>
-              </div>
-            </div>
+            <div id="inventoryHealthChart" class="chart-box"></div>
           </div>
 
           <div class="analytics-card">
             <div class="chart-header">
               <h3>Staff Performance</h3>
-              <span>XP leaderboard signal</span>
+              <span>XP Signal</span>
             </div>
-
-            <div id="staffPerformanceChart" class="chart-box">
-              <div class="chart-placeholder">
-                <span>🏆</span>
-                <p>Staff XP and productivity metrics will appear here.</p>
-              </div>
-            </div>
+            <div id="staffPerformanceChart" class="chart-box"></div>
           </div>
         </div>
 
         <div class="operations-grid">
           <div class="analytics-card">
             <h3>Recent Operational Activity</h3>
-            <div id="recentActivity" class="activity-list">
-              <p class="note">Recent orders, catalog updates, and customer activities will show here.</p>
-            </div>
+            <div id="recentActivity" class="activity-list"></div>
           </div>
 
           <div class="analytics-card">
             <h3>Critical Alerts</h3>
-            <div id="criticalAlerts" class="activity-list">
-              <p class="note">Low stock, pending reviews, and rejected orders will show here.</p>
-            </div>
+            <div id="criticalAlerts" class="activity-list"></div>
           </div>
         </div>
       </section>
@@ -286,9 +282,7 @@
       <!-- PRIVATE CATALOG -->
       <section id="catalog" class="tab">
         <h2>Product Catalog</h2>
-        <p class="note">
-          Search products, view images, and request an order.
-        </p>
+        <p class="note">Search products, view images, and request orders.</p>
 
         <div class="catalog-tools">
           <input
@@ -317,9 +311,7 @@
       <!-- CATALOG MANAGER -->
       <section id="catalogManager" class="tab">
         <h2>Catalog Manager</h2>
-        <p class="note">
-          Admin can publish catalog products using GitHub image URLs.
-        </p>
+        <p class="note">Admin can publish catalog products using image URLs.</p>
 
         <div class="card">
           <h3>Add / Publish Product</h3>
@@ -359,7 +351,6 @@
                 <th>Amount</th>
               </tr>
             </thead>
-
             <tbody id="salesTable"></tbody>
           </table>
         </div>
@@ -369,9 +360,7 @@
       <!-- EXPENSES -->
       <section id="expenses" class="tab">
         <h2>Expenses</h2>
-        <p class="note">
-          Staff can record and view expenses. Admin can view all expenses.
-        </p>
+        <p class="note">Staff can record and view expenses. Admin can view all expenses.</p>
 
         <div class="table-wrap">
           <table>
@@ -386,7 +375,6 @@
                 <th>Total</th>
               </tr>
             </thead>
-
             <tbody id="expensesTable"></tbody>
           </table>
         </div>
@@ -410,7 +398,6 @@
                 <th>Selling Price</th>
               </tr>
             </thead>
-
             <tbody id="inventoryTable"></tbody>
           </table>
         </div>
@@ -420,9 +407,7 @@
       <!-- ORDERS -->
       <section id="orders" class="tab">
         <h2>Orders</h2>
-        <p class="note">
-          Admin can approve/reject orders. Customers, staff, and admin can chat on each order.
-        </p>
+        <p class="note">Admin can approve/reject orders. Customers, staff, and admin can chat on each order.</p>
 
         <div class="table-wrap">
           <table>
@@ -439,14 +424,12 @@
                 <th>Action</th>
               </tr>
             </thead>
-
             <tbody id="ordersTable"></tbody>
           </table>
         </div>
 
         <div id="chatBox" class="card chat-box" style="display:none;">
           <h3>Order Communication Center</h3>
-
           <div id="chatMessages" class="chat-messages"></div>
 
           <div class="chat-input-row">
@@ -461,7 +444,7 @@
       <section id="customers" class="tab">
         <h2>Customer Portal</h2>
         <p class="note">
-          Customers see only their own measurements and orders. Staff/Admin can submit records for customers using email.
+          Customers can save measurements and request orders. Staff/Admin can submit records for customers using email.
         </p>
 
         <div class="cards">
@@ -522,7 +505,6 @@
                 <th>Style Notes</th>
               </tr>
             </thead>
-
             <tbody id="customersTable"></tbody>
           </table>
         </div>
@@ -544,14 +526,12 @@
                 <th>Action</th>
               </tr>
             </thead>
-
             <tbody id="customerOrdersTable"></tbody>
           </table>
         </div>
 
         <div id="customerChatBox" class="card chat-box" style="display:none;">
           <h3>Order Chat</h3>
-
           <div id="customerChatMessages" class="chat-messages"></div>
 
           <div class="chat-input-row">
@@ -565,7 +545,6 @@
       <!-- STAFF -->
       <section id="staff" class="tab">
         <h2>Staff XP Leaderboard</h2>
-
         <div id="leaderboard" class="leaderboard"></div>
       </section>
 
@@ -573,10 +552,7 @@
       <!-- FORMS -->
       <section id="forms" class="tab">
         <h2>Google Forms Hub</h2>
-        <p class="note">
-          Internal Google Forms remain available for admin/staff operations.
-        </p>
-
+        <p class="note">Internal Google Forms remain available for admin/staff operations.</p>
         <div class="form-grid" id="formLinks"></div>
       </section>
 
@@ -589,31 +565,6 @@
     <div class="modal-content">
       <button class="modal-close" type="button" onclick="closeProductModal()">×</button>
       <div id="modalProductContent"></div>
-    </div>
-  </div>
-
-
-  <!-- PUBLIC LOGIN REQUIRED MODAL -->
-  <div id="accessModal" class="modal" style="display:none;">
-    <div class="modal-content login-modal-card">
-      <button class="modal-close" type="button" onclick="closeAccessModal()">×</button>
-
-      <h2>Customer Login Required</h2>
-      <p class="note">
-        To request an order, you need customer login details.
-      </p>
-
-      <a
-        class="whatsapp-btn"
-        href="https://wa.me/2348118103510?text=Hello,%20I%20want%20customer%20login%20details%20for%20Timzy%20Fashion%20OS"
-        target="_blank"
-      >
-        Request Login Details
-      </a>
-
-      <button type="button" onclick="openLoginModal()">
-        I Already Have Login
-      </button>
     </div>
   </div>
 
