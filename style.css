@@ -45,8 +45,6 @@ body::before{
   mask-image:linear-gradient(to bottom,rgba(0,0,0,0.7),transparent 85%);
 }
 
-/* Typography */
-
 .eyebrow{
   color:var(--gold2);
   font-size:12px;
@@ -72,15 +70,15 @@ h3{
   margin:18px 0 12px;
 }
 
-p,.note,small{
+p,
+.note,
+small{
   color:var(--muted);
 }
 
 a{
   color:var(--gold2);
 }
-
-/* Public storefront */
 
 .public-header{
   display:grid;
@@ -120,8 +118,6 @@ a{
   align-items:center;
   margin-bottom:18px;
 }
-
-/* Private hero */
 
 .hero{
   display:flex;
@@ -182,16 +178,13 @@ a{
   background:linear-gradient(90deg,var(--gold),var(--green));
 }
 
-/* Navigation */
-
 nav{
   position:sticky;
   top:0;
   z-index:900;
-  display:flex;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(135px,1fr));
   gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
   padding:14px;
   background:rgba(12,12,16,0.88);
   backdrop-filter:blur(18px);
@@ -237,8 +230,6 @@ button:active{
   background:linear-gradient(135deg,#23e272,var(--green));
   color:#071108;
 }
-
-/* Layout */
 
 main{
   max-width:1400px;
@@ -302,8 +293,6 @@ main{
   background:linear-gradient(90deg,var(--red),transparent);
 }
 
-/* Technical dashboard */
-
 .analytics-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -335,7 +324,7 @@ main{
 }
 
 .chart-box{
-  min-height:260px;
+  min-height:280px;
   background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(0,0,0,0.14));
   border:1px solid var(--border);
   border-radius:20px;
@@ -348,16 +337,14 @@ main{
   max-width:100%;
 }
 
-.chart-placeholder{
-  min-height:230px;
-  display:grid;
-  place-items:center;
-  text-align:center;
+.insight-text{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.045);
+  border:1px solid var(--border);
   color:var(--muted);
-}
-
-.chart-placeholder span{
-  font-size:46px;
+  font-size:13px;
 }
 
 .activity-list{
@@ -381,8 +368,6 @@ main{
 .activity-item.danger{
   border-color:rgba(255,77,109,0.35);
 }
-
-/* Forms */
 
 form{
   display:grid;
@@ -415,8 +400,6 @@ textarea:focus{
   outline:none;
   box-shadow:0 0 0 3px rgba(217,164,65,0.16);
 }
-
-/* Catalog */
 
 .catalog-tools{
   display:grid;
@@ -479,8 +462,6 @@ textarea:focus{
   width:100%;
 }
 
-/* Tables */
-
 .table-wrap{
   overflow-x:auto;
   margin-top:18px;
@@ -531,8 +512,6 @@ tr:hover{
   font-weight:900;
 }
 
-/* Leaderboard and forms */
-
 .leaderboard,
 .form-grid{
   display:grid;
@@ -556,8 +535,6 @@ tr:hover{
 .rank-card b{
   color:var(--gold2);
 }
-
-/* Modal */
 
 .modal{
   position:fixed;
@@ -613,8 +590,6 @@ tr:hover{
   border:1px solid var(--border);
 }
 
-/* Chat */
-
 .chat-box{
   margin-top:22px;
 }
@@ -664,8 +639,6 @@ footer{
   color:var(--muted);
 }
 
-/* Mobile-first polish */
-
 @media(max-width:980px){
   .public-header,
   .hero,
@@ -691,19 +664,6 @@ footer{
     width:100%;
     min-width:0;
   }
-
-  nav{
-    justify-content:flex-start;
-    overflow-x:auto;
-    flex-wrap:nowrap;
-    padding:10px;
-  }
-
-  nav button{
-    white-space:nowrap;
-    flex:none;
-    width:auto;
-  }
 }
 
 @media(max-width:700px){
@@ -720,6 +680,22 @@ footer{
   .public-section{
     margin:18px auto;
     padding:0 12px;
+  }
+
+  nav{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:10px;
+    overflow-x:hidden;
+    padding:12px;
+  }
+
+  nav button{
+    width:100%;
+    white-space:normal;
+    min-height:48px;
+    font-size:13px;
+    padding:10px;
   }
 
   .public-actions,
@@ -791,7 +767,7 @@ footer{
   }
 
   .chart-box{
-    min-height:230px;
+    min-height:280px;
   }
 }
 
